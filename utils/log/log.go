@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"sync"
+	"log"
 )
 
 var Level LogLevel = INFO

@@ -18,7 +18,7 @@ type Term struct {
 
 // Open a terminal connected to the given stdin & stdout.
 // onSizeChange is called when the terminal window size changes.
-func Open(stdin, stdout *os.File, onSizeChange func(cols, rows uint16)) (t *Term, err error) {
+func Open(stdin, stdout *os.File, ignore_error bool, onSizeChange func(cols, rows uint16)) (t *Term, err error) {
 	if stdin == nil {
 		err = fmt.Errorf("invalid stdin")
 		return
@@ -33,15 +33,22 @@ func Open(stdin, stdout *os.File, onSizeChange func(cols, rows uint16)) (t *Term
 		stdout:       stdout,
 		onSizeChange: onSizeChange,
 	}
-
-	if !t.isTerminal() {
-		err = fmt.Errorf("not terminal")
-		return
+	if !ignore_error {
+		if !t.isTerminal() {
+			err = fmt.Errorf("not terminal")
+			return
+		}
 	}
 
 	err = t.wrapStdInOut()
-	if err != nil {
-		return
+	if !ignore_error {
+		if err != nil {
+			return
+		}
+	}
+	if t.wrapStdout == nil {
+		t.wrapStdout = stdout
+		err = nil
 	}
 
 	t.onExit = t.captureSizeChangeEvent(t.onSizeChange)
