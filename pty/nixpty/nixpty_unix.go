@@ -61,6 +61,7 @@ func openWithOptions(opt *common.Options) (p *NixPty, err error) {
 	}
 
 	log.Debug("Start NixPty")
+	p.cmd = cmd
 	return
 }
 

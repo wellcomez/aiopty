@@ -1,13 +1,17 @@
 package nixpty
 
 import (
-	"github.com/iyzyi/aiopty/pty/common"
+	"fmt"
 	"os"
+	"os/exec"
+
+	"github.com/iyzyi/aiopty/pty/common"
 )
 
 type NixPty struct {
 	opt *common.Options
 	pty *os.File
+	cmd *exec.Cmd
 }
 
 // Open create a NixPty using path as the command to run.
@@ -18,6 +22,21 @@ func Open(path string) (*NixPty, error) {
 // OpenWithOptions create a NixPty with Options.
 func OpenWithOptions(opt *common.Options) (*NixPty, error) {
 	return openWithOptions(opt)
+}
+
+func (p *NixPty) Pid() (pid int, err error) {
+	if p.cmd != nil {
+		pid = p.cmd.Process.Pid
+		return
+	}
+	err = fmt.Errorf("cmd not support")
+	return
+}
+func (p *NixPty) Kill() error {
+	if p.cmd != nil {
+		return p.cmd.Process.Kill()
+	}
+	return nil
 }
 
 // SetSize is used to set the NixPty windows size.

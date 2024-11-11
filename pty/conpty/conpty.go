@@ -1,9 +1,10 @@
 package conpty
 
 import (
-	"github.com/iyzyi/aiopty/pty/common"
 	"os"
 	"unsafe"
+
+	"github.com/iyzyi/aiopty/pty/common"
 )
 
 type ConPty struct {
@@ -14,6 +15,7 @@ type ConPty struct {
 	process       *os.Process
 	isClosed      bool
 	exit          chan struct{}
+	pid           int
 }
 
 // Open create a ConPty using path as the command to run.
@@ -24,6 +26,13 @@ func Open(path string) (*ConPty, error) {
 // OpenWithOptions create a ConPty with Options.
 func OpenWithOptions(opt *common.Options) (*ConPty, error) {
 	return openWithOptions(opt)
+}
+func (p *ConPty) Pid() (pid int, err error) {
+	pid = p.pid
+	return
+}
+func (p *ConPty) Kill() error {
+	return nil
 }
 
 // SetSize is used to set the ConPty windows size.

@@ -57,6 +57,7 @@ func openWithOptions(opt *common.Options) (p *ConPty, err error) {
 	if err != nil {
 		return
 	}
+	p.pid = pid
 
 	// Tests revealed that when the terminal corresponding to ConPty exits, the read & write pipes of ConPty
 	// are not closed, causing both io.Copy operations to be blocked. Therefore, once we detect that the

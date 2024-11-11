@@ -26,6 +26,13 @@ func Open(path string) (*WinPty, error) {
 func OpenWithOptions(opt *common.Options) (*WinPty, error) {
 	return openWithOptions(opt)
 }
+func (p *WinPty) Pid() (pid int, err error) {
+	err = fmt.Errorf("not support")
+	return
+}
+func (p *WinPty) Kill() error {
+	return nil
+}
 
 // SetSize is used to set the WinPty windows size.
 func (p *WinPty) SetSize(size *common.WinSize) (err error) {

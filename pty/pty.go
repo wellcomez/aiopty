@@ -63,6 +63,8 @@ type PtyApp interface {
 	Close() (err error)
 	Read(b []byte) (n int, err error)
 	Write(b []byte) (n int, err error)
+	Pid() (int, error)
+	Kill() error
 }
 
 // Open create a pty using path as the command to run.
@@ -142,6 +144,12 @@ func OpenWithOptions(opt *Options) (p *Pty, err error) {
 	log.Debug("Type: %v", opt.Type)
 
 	return p, err
+}
+func (p *Pty) Pid() (int, error) {
+	return p.pty.Pid()
+}
+func (p *Pty) Kill() error {
+	return p.pty.Kill()
 }
 
 // SetSize is used to set the pty windows size.
